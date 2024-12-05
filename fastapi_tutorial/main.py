@@ -1,6 +1,6 @@
 from enum import Enum
 from typing import Optional
-from fastapi import FastAPI,Query  # type: ignore
+from fastapi import FastAPI,Query,Path # type: ignore
 from pydantic import BaseModel # type: ignore
 app = FastAPI()
 
@@ -102,9 +102,21 @@ class Transport(BaseModel):
 async def transport(transport:Transport):
     return transport
 
+
 @app.get("/itemss")
-async def items(q: str | None = Query(None,min_length = 3,max_length = 10,regex = "^altayjabbar$",alias = "txt"):
-    results = {"items":[{"item_id":"Foo"},{"item_id":"bar"}]}
+async def items(q: str = Query("altayjabbar", min_length=3, max_length=10, regex="^altayjabbar$", alias="txt")):
+    results = {"items": [{"item_id": "Foo"}, {"item_id": "bar"}]}
+    results.update({"q": q})
+    return results
+
+
+@app.get("/items_validations{itemdsd_id}")
+async def read_items_validation(
+    itemdsd_id: int = Path(..., title="Item id"),
+    q: str | None = Query(None, alias='item-query'),
+    size: float = Query(..., gt =1, lt = 10)
+):
+    results = {"itemdsd_id": itemdsd_id,"size":size}
     if q:
-        results.update({"q":q})
+        results.update({"q": q})
     return results
