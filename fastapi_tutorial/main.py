@@ -1,4 +1,6 @@
 from enum import Enum
+from uuid import UUID
+from datetime import datetime
 from typing import Optional,List
 from fastapi import Body,FastAPI,Query,Path # type: ignore
 from pydantic import BaseModel,Field # type: ignore
@@ -194,23 +196,29 @@ app = FastAPI()
 # async def create_offer(offer: Offer):
 #     return offer
     
-class Item(BaseModel):
-    name : str
-    description : str | None = None
-    price : float
-    tax : float | None  = None  
+# class Item(BaseModel):
+#     name : str
+#     description : str | None = None
+#     price : float
+#     tax : float | None  = None  
 
-    class Config:
-        shema_extra = {
-            "example":{
-                "name":"Foo",
-                "description": "A very nice Item",
-                "price": 16.34,
-                "tax":1.67
-            }
-        }
+#     class Config:
+#         shema_extra = {
+#             "example":{
+#                 "name":"Foo",
+#                 "description": "A very nice Item",
+#                 "price": 16.34,
+#                 "tax":1.67
+#             }
+#         }
 
-@app.put("/items/{item_id}")
-async def item_update(item_id: int, item:Item=Body(...,example ={"name":"foo","description":"faster","price":22.34,"tax":3.43})):
-    results = {"item_id":item_id,"item":item}
-    return results
+# @app.put("/items/{item_id}")
+# async def item_update(item_id: int, item:Item=Body(...,example ={"name":"foo","description":"faster","price":22.34,"tax":3.43})):
+#     results = {"item_id":item_id,"item":item}
+#     return results
+
+
+
+@app.put("/items//{item_id}")
+async def read_items(item_id:UUID,start_date: datetime | None = Body(None),end_date:datetime | None = Body(None):
+    return {"item_id":item_id,"start_date":start_date}
