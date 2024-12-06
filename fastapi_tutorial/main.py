@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Optional
+from typing import Optional,List
 from fastapi import Body,FastAPI,Query,Path # type: ignore
 from pydantic import BaseModel,Field # type: ignore
 app = FastAPI()
@@ -154,13 +154,43 @@ app = FastAPI()
 #         results.update({"importance":importance})
 
 
+# class Item(BaseModel):
+#     name : str
+#     description: str | None = Field(None,title="the description of the item", max_length = 300)
+#     price : float | None = Field(...,gt=0, title = "price geater than 0")
+#     tax : float| None = None
+
+# @app.put("/item{item_id}")
+# async def update_item(item_id: int, item:Item = Body(..., embed = True)):
+#     results = {"item_id":item_id,"item":item}
+#     return results
+
+class Image(BaseModel):
+    url: str
+    name: str
 class Item(BaseModel):
-    name : str
-    description: str | None = Field(None,title="the description of the item", max_length = 300)
-    price : float | None = Field(...,gt=0, title = "price geater than 0")
-    tax : float| None = None
+    name: str
+    description : str | None = None
+    tax: float
+    price : float | None = None
+    tags: set[str] = []
+    image: list[Image] |None = None
+
+class Offer(BaseModel):
+    name: str
+    description : str|None = None
+    price : float
+    items:list[Item]
+
+
+
 
 @app.put("/item{item_id}")
-async def update_item(item_id: int, item:Item = Body(..., embed = True)):
-    results = {"item_id":item_id,"item":item}
+async def update_item(item_id: int, item:Item):
+    results = {"item_id": item_id, "item":item}
     return results
+
+@app.post("/offers")
+async def create_offer(offer: Offer):
+    return offer
+    
