@@ -165,32 +165,52 @@ app = FastAPI()
 #     results = {"item_id":item_id,"item":item}
 #     return results
 
-class Image(BaseModel):
-    url: str
-    name: str
-class Item(BaseModel):
-    name: str
-    description : str | None = None
-    tax: float
-    price : float | None = None
-    tags: set[str] = []
-    image: list[Image] |None = None
+# class Image(BaseModel):
+#     url: str
+#     name: str
+# class Item(BaseModel):
+#     name: str
+#     description : str | None = None
+#     tax: float
+#     price : float | None = None
+#     tags: set[str] = []
+#     image: list[Image] |None = None
 
-class Offer(BaseModel):
-    name: str
-    description : str|None = None
-    price : float
-    items:list[Item]
-
-
+# class Offer(BaseModel):
+#     name: str
+#     description : str|None = None
+#     price : float
+#     items:list[Item]
 
 
-@app.put("/item{item_id}")
-async def update_item(item_id: int, item:Item):
-    results = {"item_id": item_id, "item":item}
-    return results
 
-@app.post("/offers")
-async def create_offer(offer: Offer):
-    return offer
+
+# @app.put("/item{item_id}")
+# async def update_item(item_id: int, item:Item):
+#     results = {"item_id": item_id, "item":item}
+#     return results
+
+# @app.post("/offers")
+# async def create_offer(offer: Offer):
+#     return offer
     
+class Item(BaseModel):
+    name : str
+    description : str | None = None
+    price : float
+    tax : float | None  = None  
+
+    class Config:
+        shema_extra = {
+            "example":{
+                "name":"Foo",
+                "description": "A very nice Item",
+                "price": 16.34,
+                "tax":1.67
+            }
+        }
+
+@app.put("/items/{item_id}")
+async def item_update(item_id: int, item:Item=Body(...,example ={"name":"foo","description":"faster","price":22.34,"tax":3.43})):
+    results = {"item_id":item_id,"item":item}
+    return results
