@@ -1,9 +1,10 @@
 from enum import Enum
 from uuid import UUID
 from datetime import datetime
-from typing import Optional,List
-from fastapi import Body,FastAPI,Query,Path # type: ignore
-from pydantic import BaseModel,Field # type: ignore
+from typing import Optional, List
+from fastapi import Body, FastAPI, Query, Path,Cookie,Header  # type: ignore
+from pydantic import BaseModel, Field  # type: ignore
+
 app = FastAPI()
 
 
@@ -61,7 +62,7 @@ app = FastAPI()
 #     if q:
 #         item.update({"q":q})
 #     if not short:
-#         item.update({"description":"nothing "})    
+#         item.update({"description":"nothing "})
 #     return item
 
 # @app.get("/users/{users_id}/items/{items_id}")
@@ -71,7 +72,7 @@ app = FastAPI()
 #         item.update({"q":q})
 #     if not short:
 #         item.update({"description":'nothing'})
-#     return item 
+#     return item
 
 
 # class Item(BaseModel):
@@ -131,7 +132,6 @@ app = FastAPI()
 #     tax : float | None = None
 
 
-
 # class User(BaseModel):
 #     name : str
 #     full_name : str | None  = None
@@ -185,8 +185,6 @@ app = FastAPI()
 #     items:list[Item]
 
 
-
-
 # @app.put("/item{item_id}")
 # async def update_item(item_id: int, item:Item):
 #     results = {"item_id": item_id, "item":item}
@@ -195,12 +193,12 @@ app = FastAPI()
 # @app.post("/offers")
 # async def create_offer(offer: Offer):
 #     return offer
-    
+
 # class Item(BaseModel):
 #     name : str
 #     description : str | None = None
 #     price : float
-#     tax : float | None  = None  
+#     tax : float | None  = None
 
 #     class Config:
 #         shema_extra = {
@@ -218,7 +216,17 @@ app = FastAPI()
 #     return results
 
 
+# @app.put("/items//{item_id}")
+# async def read_items(
+#     item_id: UUID,
+#     start_date: datetime | None = Body(None),
+#     end_date: datetime | None = Body(None),
+# ):
+#     return {"item_id": item_id, "start_date": start_date}
 
-@app.put("/items//{item_id}")
-async def read_items(item_id:UUID,start_date: datetime | None = Body(None),end_date:datetime | None = Body(None):
-    return {"item_id":item_id,"start_date":start_date}
+@app.get("items")
+async def read_items(
+    cookie_id: str | None = Cookie(None),
+    accept_encoding : str | None  = Header(None)):
+    return {"cookie_id":cookie_id,
+        "accept_encoding":accept_encoding}
