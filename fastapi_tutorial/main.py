@@ -2,7 +2,7 @@ from enum import Enum
 from uuid import UUID
 from datetime import datetime
 from typing import Optional, List
-from fastapi import Body, FastAPI, Query, Path, Cookie, Header  # type: ignore
+from fastapi import Body, FastAPI, Query, Path, Cookie, Header, Form # type: ignore
 from pydantic import BaseModel, Field, EmailStr  # type: ignore
 
 app = FastAPI()
@@ -292,11 +292,18 @@ app = FastAPI()
 
 
 
+# statsus_code
+# @app.get("/items", status_code =201)
+# async def read_items(name:str):
+#     return {"name":name}
 
-@app.get("/items", status_code =201)
-async def read_items(name:str):
-    return {"name":name}
+# @app.post("/items", status_code =204)
+# async def create_items(name:str):
+#     return {"name":name}
 
-@app.post("/items", status_code =204)
-async def create_items(name:str):
-    return {"name":name}
+# form fields
+
+@app.get("/login")
+async def login(username:str=Form(...), password:str=Form(...)):
+    return {"username":username}
+
