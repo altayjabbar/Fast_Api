@@ -6,9 +6,10 @@ class User(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, index=True)
+    surname = Column(String,index = True)
     email = Column(String, unique=True, index=True)
     student = relationship("Student", back_populates="user", uselist=False)
-
+   
 class Student(Base):
     __tablename__ = 'students'
     id = Column(Integer,primary_key = True)
