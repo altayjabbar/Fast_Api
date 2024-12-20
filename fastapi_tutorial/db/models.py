@@ -1,6 +1,8 @@
 from sqlalchemy import Column, Integer, String,ForeignKey
 from .database import Base
 from sqlalchemy.orm import relationship
+
+
 class User(Base):
     __tablename__ = "users"
 
@@ -18,4 +20,19 @@ class Student(Base):
     description = Column(String)
     subject = Column(String)
     user_id = Column(Integer, ForeignKey("users.id"), unique=True)
+
+
+
     user = relationship("User", back_populates="student")
+    address = relationship("Address",back_populates = "student")
+
+
+class Address(Base):
+    __tablename__ = "address"
+    id = Column(Integer, primary_key= True)
+    city = Column(String)
+    student_id = Column(Integer,ForeignKey("students.id"))
+
+    
+    student = relationship("Student",back_populates="address")
+
